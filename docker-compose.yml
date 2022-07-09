@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  db_graphql:
+    image: postgres:13-alpine
+    env_file:
+      - .env.prod
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+  
+  app:
+    build:
+      context: .
+    ports:
+      - 5000:5000
+    env_file:
+      - .env.prod
+    volumes:
+      - .:/app:rw
+    command:
+      sh -c "python3 main_prod.py"
+    depends_on:
+      - db_graphql
+
+volumes:
+    postgres_data:
