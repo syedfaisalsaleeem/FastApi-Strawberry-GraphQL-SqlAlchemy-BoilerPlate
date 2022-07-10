@@ -68,15 +68,16 @@ async def update_stickynotes(stickynote_id, text):
     """ Update stickynotes resolver """
     async with get_session() as s:
         sql = select(stickynotes_model.StickyNotes).where(stickynotes_model.StickyNotes.id == stickynote_id)
-        existing_db_stickynote = (await s.execute(sql)).scalars().unique().one()
+        existing_db_stickynote = (await s.execute(sql)).first()
         if existing_db_stickynote is None:
             return StickyNotesNotFound()
 
-        existing_db_stickynote.text = text
-        db_stickynotes_serialize_data = existing_db_stickynote.as_dict()
-
         query = update(stickynotes_model.StickyNotes).where(stickynotes_model.StickyNotes.id == stickynote_id).values(text=text)
         await s.execute(query)
+
+        sql = select(stickynotes_model.StickyNotes).where(stickynotes_model.StickyNotes.id == stickynote_id)
+        db_stickynote = (await s.execute(sql)).scalars().unique().one()
         await s.commit()
-    
+
+    db_stickynotes_serialize_data = db_stickynote.as_dict()
     return StickyNotes(**db_stickynotes_serialize_data)

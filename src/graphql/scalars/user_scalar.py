@@ -9,6 +9,11 @@ class User:
     stickynotes: typing.Optional[typing.List[StickyNotes]] = Field(default_factory=list)
 
 @strawberry.type
+class AddUser:
+    id: int
+    name: typing.Optional[str] = ""
+
+@strawberry.type
 class UserExists:
     message: str = "User with this name already exists"
 

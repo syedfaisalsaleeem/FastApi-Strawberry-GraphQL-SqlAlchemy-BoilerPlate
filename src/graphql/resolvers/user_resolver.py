@@ -1,10 +1,10 @@
-from sqlalchemy import delete, select
+from sqlalchemy import delete, insert, select
 from sqlalchemy.orm import subqueryload,load_only
 
 from src.graphql.db.session import get_session
 from src.graphql.helpers.helper import get_only_selected_fields, get_valid_data
 from src.graphql.models import user_model
-from src.graphql.scalars.user_scalar import User, UserDeleted, UserExists, UserNotFound
+from src.graphql.scalars.user_scalar import AddUser, User, UserDeleted, UserExists, UserNotFound
 
 async def get_users(info):
     """ Get all users resolver """
@@ -36,17 +36,21 @@ async def get_user(user_id, info):
 async def add_user(name):
     """ Add user resolver """
     async with get_session() as s:
-        sql = select(user_model.User).where(user_model.User.name == name)
+        sql = select(user_model.User).options(load_only('name')) \
+            .filter(user_model.User.name == name)
         existing_db_user = (await s.execute(sql)).first()
         if existing_db_user is not None:
             return UserExists()
 
-        db_user = user_model.User(name=name)
-        s.add(db_user)
+        query = insert(user_model.User).values(name=name)
+        await s.execute(query)
+        
+        sql = select(user_model.User).options(load_only('name')).filter(user_model.User.name == name)
+        db_user = (await s.execute(sql)).scalars().unique().one()
         await s.commit()
-    
+
     db_user_serialize_data = db_user.as_dict()
-    return User(**db_user_serialize_data)
+    return AddUser(**db_user_serialize_data)
 
 async def delete_user(user_id):
     """ Delete user resolver """

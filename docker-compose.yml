@@ -4,7 +4,7 @@ services:
   db_graphql:
     image: postgres:13-alpine
     env_file:
-      - .env.prod
+      - envs/.env
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     ports:
@@ -16,11 +16,11 @@ services:
     ports:
       - 5000:5000
     env_file:
-      - .env.prod
+      - envs/.env
     volumes:
       - .:/app:rw
     command:
-      sh -c "python3 main_prod.py"
+      sh -c "python3 main.py"
     depends_on:
       - db_graphql
 
