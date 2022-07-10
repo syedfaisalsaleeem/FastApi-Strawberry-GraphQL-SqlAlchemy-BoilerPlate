@@ -31,6 +31,7 @@ async def get_user(user_id, info):
         db_user = (await s.execute(sql)).scalars().unique().one()
     
     user_dict = get_valid_data(db_user,user_model.User)
+    user_dict["stickynotes"] = db_user.stickynotes
     return User(**user_dict)
 
 async def add_user(name):
