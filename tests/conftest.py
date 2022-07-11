@@ -1,21 +1,21 @@
+import asyncio
+import unittest
 import pytest
-from fastapi.testclient import TestClient
-from src.app import create_app
+from src.graphql.db.session import get_session
+from tests.graphql.db import overide_get_session
+from main import application as app
+app.dependency_overrides[get_session] = overide_get_session
 
+@pytest.mark.usefixtures("event_loop_instance")
+class TestAsynchronously(unittest.TestCase):
 
-@pytest.fixture
-def test_client():
-    app = create_app()
-    return TestClient(app)
-
-
-@pytest.fixture
-def test_client_keep_alive():
-    app = create_app(keep_alive=True, keep_alive_interval=0.1)
-    return TestClient(app)
-
-
-@pytest.fixture
-def test_client_no_graphiql():
-    app = create_app(graphiql=False)
-    return TestClient(app)
+    def get_async_result(self, coro):
+        """ Run a coroutine synchronously. """
+        return self.event_loop.run_until_complete(coro)
+        
+@pytest.fixture(scope="class")
+def event_loop_instance(request):
+    """ Add the event_loop as an attribute to the unittest style test class. """
+    request.cls.event_loop = asyncio.get_event_loop_policy().new_event_loop()
+    yield
+    request.cls.event_loop.close()
