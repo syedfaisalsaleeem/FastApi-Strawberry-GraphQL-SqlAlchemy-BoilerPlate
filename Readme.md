@@ -35,32 +35,32 @@ To run the project in your local environment::
 
   1. Clone the repository::
 ```
-    git clone https://github.com/syedfaisalsaleeem/FastApi-Strawberry-GraphQL-SqlAlchemy-BoilerPlate.git
-    cd FastApi-Strawberry-GraphQL-SqlAlchemy-BoilerPlate
+  $ git clone https://github.com/syedfaisalsaleeem/FastApi-Strawberry-GraphQL-SqlAlchemy-BoilerPlate.git
+  $ cd FastApi-Strawberry-GraphQL-SqlAlchemy-BoilerPlate
 ```
   2. Create and activate a virtual environment::
 ```
-    virtualenv env -p python3
-    source env/bin/activate
+  $ virtualenv env -p python3
+  $ source env/bin/activate
 ```
   3. Install requirements::
 ```
-    pip install -r requirements.txt
+  $ pip install -r requirements.txt
 ```
   4. Run the application::
 ```
-    python main_dev.py
+  $ python main_dev.py
 ```
 To run the project using Docker Container:
 
   1. Clone the repository::
 ```
-    git clone https://github.com/syedfaisalsaleeem/FastApi-Strawberry-GraphQL-SqlAlchemy-BoilerPlate.git
-    cd FastApi-Strawberry-GraphQL-SqlAlchemy-BoilerPlate
+  $ git clone https://github.com/syedfaisalsaleeem/FastApi-Strawberry-GraphQL-SqlAlchemy-BoilerPlate.git
+  $ cd FastApi-Strawberry-GraphQL-SqlAlchemy-BoilerPlate
 ```
   2. Run this command on CMD::
 ```
-    docker-compose up -d --build
+  $ docker-compose up -d --build
 ```
 ## Usage Examples
 
@@ -78,8 +78,10 @@ Test are run with *pytest*. If you are not familiar with this package you can ge
 
 To run the tests, from the project directory, simply::
 
-    pip install -r requirements.txt
-    python test.py
+```
+$ pip install -r requirements.txt
+$ python test.py
+```
 
 You should see output similar to::
 ```
